@@ -32,7 +32,7 @@
                 <br>
                 <div id="carbonads-container" style="text-align: center">
                     <span class="carbonad-image">
-                        <img src="http://<?php echo $_SERVER['SERVER_NAME'] . '/images/vice/escudo-umb_2.png' ?>">
+                        <img src="http://<?php echo $_SERVER['SERVER_NAME'] . '/convocatorias/images/vice/escudo-umb_2.png' ?>">
                     </span>
                 </div>
             </div>
@@ -117,7 +117,8 @@
             Vicerrectoría de Calidad
         </a>
         <br>
-        Cra 24 # 35-57, Barrio La Soledad - Teléfono: 5460600 ext. 1207 - 1600
+        Cra 24 # 35-57, Barrio La Soledad - Teléfono: 5460600 ext. 1207 - 1600,
+        Fecha Actual: <?php echo date("Y-m-d H:i:s") ?>
     </div>
     <br>
 </page_footer>
@@ -358,7 +359,8 @@
             Vicerrectoría de Calidad
         </a>
         <br>
-        Cra 24 # 35-57, Barrio La Soledad - Teléfono: 5460600 ext. 1207 - 1600
+        Cra 24 # 35-57, Barrio La Soledad - Teléfono: 5460600 ext. 1207 - 1600,
+        Fecha Actual: <?php echo date("Y-m-d H:i:s") ?>
     </div>
     <br>
 </page_footer>
