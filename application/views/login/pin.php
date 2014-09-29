@@ -11,7 +11,7 @@
     <?php echo form_input('username', '', 'class="form-control" placeholder="Documento" autofocus') ?>
     <?php echo form_input('email', '', 'class="form-control" placeholder="Correo Electronico" autofocus') ?>
     <br>
-    <button class="btn btn-lg btn-warning btn-block loading-example-btn" data-loading-text="Enviando Correo..." type="submit">Recordar Pin</button>
+    <button class="btn btn-lg btn-warning btn-block loading-example-btn" data-loading-text="Consultando informaci&oacute;n..." type="submit">Recordar Pin</button>
 
     <?php echo form_close(); ?> 
     <?php if ($this->session->flashdata('message')) { ?>
