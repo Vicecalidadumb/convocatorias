@@ -38,7 +38,7 @@ class Ingreso extends CI_Controller {
         $conv = deencrypt_id($conv);
 
         if ($this->session->userdata('logged_in')) {
-            redirect('registro/certificado/' . encrypt_id($this->session->userdata('USUARIO_ID')) . '/' . encrypt_id($conv), 'refresh');
+            redirect('registro/certificado', 'refresh');
         } else {
 
             $data['convocatoria'] = $this->user_model->get_conv($conv);
@@ -56,6 +56,35 @@ class Ingreso extends CI_Controller {
                 );
 
                 $data['content'] = 'login/certified';
+                $this->load->view('template/template', $data);
+            } else {
+                redirect('ingreso/error404', 'refresh');
+            }
+        }
+    }
+
+    public function editar_datos($conv = 'NzM4NzY5MTE2NjMx') {
+        $conv = deencrypt_id($conv);
+
+        if ($this->session->userdata('logged_in')) {
+            redirect('registro/editar', 'refresh');
+        } else {
+
+            $data['convocatoria'] = $this->user_model->get_conv($conv);
+
+            if (count($data['convocatoria']) > 0) {
+                $data['title'] = 'Constancia de Inscripcion';
+
+                $data['template_config'] = array(
+                    'signin' => 1,
+                    'menu' => 0,
+                    'bootstrap-theme' => 0,
+                    'jquery' => 0,
+                    'validate' => 0,
+                    'bootstrapjs' => 0
+                );
+
+                $data['content'] = 'login/edit';
                 $this->load->view('template/template', $data);
             } else {
                 redirect('ingreso/error404', 'refresh');
@@ -130,7 +159,7 @@ class Ingreso extends CI_Controller {
         //$mail = 
         if (sizeof($user) > 0) {
 
-            $this->session->set_flashdata(array('message' => 'Su numero de PIN es: '.$user[0]->INSCRIPCION_PIN.', recuerde guardarlo para poder ingresar al aplicativo.', 'message_type' => 'pin'));
+            $this->session->set_flashdata(array('message' => 'Su numero de PIN es: ' . $user[0]->INSCRIPCION_PIN . ', recuerde guardarlo para poder ingresar al aplicativo.', 'message_type' => 'pin'));
             redirect('ingreso/recordar_pin', 'refresh');
 
             ////////ENVIO POR CORREO ELECTRONICO
@@ -239,16 +268,32 @@ class Ingreso extends CI_Controller {
                 //echo print_y($this->session->userdata('logged_in'));
                 if ($this->input->post('certified')) {
                     redirect('registro/certificado', 'refresh');
+                } elseif ($this->input->post('edit')) {
+                    redirect('registro/editar', 'refresh');
                 } else {
                     redirect('escritorio', 'location');
                 }
             } else {
                 $this->session->set_flashdata(array('message' => '<strong>Error:</strong> Pin Incorrecto.', 'message_type' => 'danger'));
-                redirect('', 'refresh');
+
+                if ($this->input->post('certified')) {
+                    redirect('ingreso/constancia', 'refresh');
+                } elseif ($this->input->post('edit')) {
+                    redirect('ingreso/editar_datos', 'refresh');
+                } else {
+                    redirect('', 'location');
+                }
             }
         } else {
             $this->session->set_flashdata(array('message' => 'Su n&uacute;mero de documento no se encuentra registrado en el sistema, por favor reg&iacute;strese dando clic en el boton "Registrarse"', 'message_type' => 'warning'));
-            redirect('', 'refresh');
+
+            if ($this->input->post('certified')) {
+                redirect('ingreso/constancia', 'refresh');
+            } elseif ($this->input->post('edit')) {
+                redirect('ingreso/editar_datos', 'refresh');
+            } else {
+                redirect('', 'location');
+            }
         }
     }
 

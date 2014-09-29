@@ -176,18 +176,6 @@ class Registro extends CI_Controller {
         }
     }
 
-    public function document_check($document = 0, $convocatoria = 0) {
-        $data['convocatoria'] = $this->call_model->get_conv($convocatoria);
-//FUNCION CREADA PARA VALIDAR LA CREACION DE USUARIOS DE UNA CONVOCATORIA.
-        $user = $this->register_model->get_user_convocatoria($document, $convocatoria);
-        if (count($user) > 0) {
-            $this->form_validation->set_message('document_check', 'El usuario con documento <strong>' . $document . '</strong> ya se encuentra inscrito en la convocatoria: ' . $data['convocatoria'][0]->CONVOCATORIA_NOMBRE);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public function certificado($view_pdf = '') {
         $id_user = $this->session->userdata('USUARIO_ID');
         $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
@@ -238,18 +226,38 @@ class Registro extends CI_Controller {
         }
     }
 
-    public function edit($id_user) {
-        $id_user = deencrypt_id($id_user);
+    public function editar() {
+        $id_user = $this->session->userdata('USUARIO_ID');
+        $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
 
-        validation_permission_role($this->module_sigla, 'permission_edit');
 
-        $data['user'] = $this->user_model->get_user($id_user);
-        if (count($data['user']) > 0) {
-            $data['roles'] = get_dropdown($this->user_model->get_all_roles(), 'ID_TIPO_USU', 'NOM_TIPO_USU');
-            $data['states'] = get_array_states();
+        if ($id_user != '') {
+            $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
+            $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
 
-            $data['title'] = 'Editar Usuario';
-            $data['content'] = 'user/edit';
+            $data['departments_1'] = get_dropdown($this->register_model->get_all_departments(), 'DEPARTAMENTO_ID', 'DEPARTAMENTO_NOMBRE');
+            $data['departments_1'][''] = '--SELECCIONE UN DEPARTAMENTO--';
+            asort($data['departments_1']);
+
+            $data['departments_2'] = $data['departments_1'];
+            $data['convocatorias'] = get_dropdown($this->register_model->get_all_calls(), 'CONVOCATORIA_ID', 'CONVOCATORIA_NOMBRE');
+
+            $data['mun'] = get_dropdown($this->register_model->get_all_cities('ALL'), 'MUNICIPIO_ID', 'MUNICIPIO_NOMBRE');
+
+            $data['tipos_documentos'] = get_tipos_documentos();
+
+            $data['title'] = 'Editar datos del Aspirantes';
+
+            $data['template_config'] = array(
+                'signin' => 0,
+                'menu' => 1,
+                'bootstrap-theme' => 0,
+                'jquery' => 1,
+                'validate' => 1,
+                'bootstrapjs' => 1
+            );
+
+            $data['content'] = 'register/edit';
             $this->load->view('template/template', $data);
         } else {
             $this->session->set_flashdata(array('message' => 'Error al Consultar el Registro', 'message_type' => 'warning'));
@@ -258,31 +266,122 @@ class Registro extends CI_Controller {
     }
 
     public function update() {
-        validation_permission_role($this->module_sigla, 'permission_edit');
+        $id_user = $this->session->userdata('USUARIO_ID');
+        $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
+        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
 
-        if ($this->input->post('USUARIO_CLAVE', TRUE) != '') {
-            $user_password = make_hash($this->input->post('USUARIO_CLAVE', TRUE));
-            $user_id = $this->input->post('USUARIO_ID', TRUE);
-            $this->user_model->update_user_password($user_password, $user_id);
-        }
+        if (count($data ['convocatoria']) > 0) {
+            $data_convocatoria = $data['convocatoria'];
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
 
-        $data = array(
-            'USUARIO_ID' => $this->input->post('USUARIO_ID', TRUE),
-            'USUARIO_NOMBRES' => $this->input->post('USUARIO_NOMBRES', TRUE),
-            'USUARIO_APELLIDOS' => $this->input->post('USUARIO_APELLIDOS', TRUE),
-            'USUARIO_TIPODOCUMENTO' => $this->input->post('USUARIO_TIPODOCUMENTO', TRUE),
-            'USUARIO_NUMERODOCUMENTO' => $this->input->post('USUARIO_NUMERODOCUMENTO', TRUE),
-            'USUARIO_CORREO' => $this->input->post('USUARIO_CORREO', TRUE),
-            'ID_TIPO_USU' => $this->input->post('ID_TIPO_USU', TRUE)
-        );
-        $update = $this->user_model->update_user($data);
+            $this->form_validation->set_rules('USUARIO_TIPODOCUMENTO', 'Tipo de Documento', 'required|trim');
+            $this->form_validation->set_rules('USUARIO_NOMBRES', 'Nombres', 'required|min_length[2]|trim');
+            $this->form_validation->set_rules('USUARIO_GENERO', 'Genero', 'required|trim');
+            $this->form_validation->set_rules('USUARIO_DIRECCIONRESIDENCIA', 'Direccion', 'trim');
+            $this->form_validation->set_rules('USUARIO_TELEFONOFIJO', 'Telefono', 'required|trim');
+            $this->form_validation->set_rules('USUARIO_CORREO', 'Correo Electronico', 'trim');
+            $this->form_validation->set_rules('USUARIO_CORREO_2', 'Correo Electronico', 'required|valid_email|trim');
+            $this->form_validation->set_rules('USUARIO_NUMERODOCUMENTO', 'Numero de Documento', 'required|numeric|min_length[2]|trim|callback_documentant_check[' . $data['convocatoria'][0]->CONVOCATORIA_ID . '-' . addslashes($this->input->post('USUARIO_NUMERODOCUMENTO_ANT', TRUE)) . ']');
+            $this->form_validation->set_rules('USUARIO_APELLIDOS', 'Apellidos', 'required|min_length[2]|trim');
+            $this->form_validation->set_rules('USUARIO_FECHADENACIMIENTO', 'Fecha de Nacimiento', 'required|min_length[10]|trim');
+            $this->form_validation->set_rules('USUARIO_LUGARDENACIMIENTO', 'Municipio de Nacimiento', 'required|trim');
+            $this->form_validation->set_rules('USUARIO_LUGARDERESIDENCIA', 'Municipio de Residencia', 'required|trim');
+            $this->form_validation->set_rules('USUARIO_CELULAR', 'Numero Celular', 'trim');
 
-        if ($update) {
-            $this->session->set_flashdata(array('message' => 'Usuario editado con exito', 'message_type' => 'info'));
-            redirect('user', 'refresh');
+            if ($this->form_validation->run() == FALSE) {
+
+                $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
+                $data['departments_1'] = get_dropdown($this->register_model->get_all_departments(), 'DEPARTAMENTO_ID', 'DEPARTAMENTO_NOMBRE');
+                $data['departments_1'][''] = '--SELECCIONE UN DEPARTAMENTO--';
+                asort($data['departments_1']);
+                $data['departments_2'] = $data['departments_1'];
+                $data['convocatorias'] = get_dropdown($this->register_model->get_all_calls(), 'CONVOCATORIA_ID', 'CONVOCATORIA_NOMBRE');
+                $data['mun'] = get_dropdown($this->register_model->get_all_cities('ALL'), 'MUNICIPIO_ID', 'MUNICIPIO_NOMBRE');
+                $data['tipos_documentos'] = get_tipos_documentos();
+                $data['title'] = 'Editar datos del Aspirantes';
+                $data['template_config'] = array(
+                    'signin' => 0,
+                    'menu' => 1,
+                    'bootstrap-theme' => 0,
+                    'jquery' => 1,
+                    'validate' => 1,
+                    'bootstrapjs' => 1
+                );
+                $data['content'] = 'register/edit';
+                $this->load->view('template/template', $data);
+            } else {
+                $data = array(
+                    'USUARIO_TIPODOCUMENTO' => addslashes($this->input->post('USUARIO_TIPODOCUMENTO', TRUE)),
+                    'USUARIO_NOMBRES' => addslashes(mb_strtoupper($this->input->post('USUARIO_NOMBRES', TRUE), 'utf-8')),
+                    'USUARIO_GENERO' => addslashes($this->input->post('USUARIO_GENERO', TRUE)),
+                    'USUARIO_DIRECCIONRESIDENCIA' => addslashes(mb_strtoupper($this->input->post('USUARIO_DIRECCIONRESIDENCIA', TRUE), 'utf-8')),
+                    'USUARIO_TELEFONOFIJO' => addslashes($this->input->post('USUARIO_TELEFONOFIJO', TRUE)),
+                    'USUARIO_CORREO' => addslashes(mb_strtoupper($this->input->post('USUARIO_CORREO', TRUE), 'utf-8')),
+                    'USUARIO_NUMERODOCUMENTO' => addslashes($this->input->post('USUARIO_NUMERODOCUMENTO', TRUE)),
+                    'USUARIO_APELLIDOS' => addslashes(mb_strtoupper($this->input->post('USUARIO_APELLIDOS', TRUE), 'utf-8')),
+                    'USUARIO_FECHADENACIMIENTO' => addslashes($this->input->post('USUARIO_FECHADENACIMIENTO', TRUE)),
+                    'USUARIO_LUGARDENACIMIENTO' => addslashes($this->input->post('USUARIO_LUGARDENACIMIENTO', TRUE)),
+                    'USUARIO_LUGARDERESIDENCIA' => addslashes($this->input->post('USUARIO_LUGARDERESIDENCIA', TRUE)),
+                    'USUARIO_CELULAR' => addslashes($this->input->post('USUARIO_CELULAR', TRUE)),
+                    'CONVOCATORIA_ID' => $id_convocatoria,
+                    'USUARIO_ID' => addslashes($this->input->post('USUARIO_ID', TRUE)),
+                    'INSCRIPCION_PIN' => addslashes($this->input->post('INSCRIPCION_PIN', TRUE)),
+                );
+                $insert = $this->register_model->update_user($data);
+                if ($insert) {
+                    $this->session->set_userdata('USUARIO_NOMBRES', $data['USUARIO_NOMBRES']);
+                    $this->session->set_userdata('USUARIO_APELLIDOS', $data['USUARIO_APELLIDOS']);
+                    $this->session->set_userdata('USUARIO_TIPODOCUMENTO', $data['USUARIO_TIPODOCUMENTO']);
+                    $this->session->set_userdata('USUARIO_NUMERODOCUMENTO', $data['USUARIO_NUMERODOCUMENTO']);
+                    $this->session->set_userdata('USUARIO_CORREO', $data['USUARIO_CORREO']);
+                    $this->session->set_userdata('USUARIO_GENERO', $data['USUARIO_GENERO']);
+                    $this->session->set_userdata('USUARIO_FECHADENACIMIENTO', $data['USUARIO_FECHADENACIMIENTO']);
+                    $this->session->set_userdata('USUARIO_DIRECCIONRESIDENCIA', $data['USUARIO_DIRECCIONRESIDENCIA']);
+                    $this->session->set_userdata('USUARIO_TELEFONOFIJO', $data['USUARIO_TELEFONOFIJO']);
+                    $this->session->set_userdata('USUARIO_CELULAR', $data['USUARIO_CELULAR']);
+                    $this->session->set_flashdata(array('message' => 'Usuario editado con exito.', 'message_type' => 'info'));
+
+                    redirect('registro/editar', 'refresh');
+                } else {
+                    $this->session->set_flashdata(array('message' => 'Error al editado el registro', 'message_type' => 'danger'));
+                    redirect('registro/editar', 'refresh');
+                }
+            }
         } else {
-            $this->session->set_flashdata(array('message' => 'Error al editar usuario', 'message_type' => 'warning'));
-            redirect('user', 'refresh');
+            $this->session->set_flashdata(array('message' => 'Convocatoria no encontrada o fuera de fechas.', 'message_type' => 'danger'));
+            redirect('registro/editar', 'refresh');
+        }
+    }
+
+    /*     * ************************************** FUNCIONES AJAX ****************************************** */
+
+    public function document_check($document = 0, $convocatoria = 0) {
+        $data['convocatoria'] = $this->call_model->get_conv($convocatoria);
+        //FUNCION CREADA PARA VALIDAR LA CREACION DE USUARIOS DE UNA CONVOCATORIA.
+        $user = $this->register_model->get_user_convocatoria($document, $convocatoria);
+        if (count($user) > 0) {
+            $this->form_validation->set_message('document_check', 'El usuario con documento <strong>' . $document . '</strong> ya se encuentra inscrito en la convocatoria: ' . $data['convocatoria'][0]->CONVOCATORIA_NOMBRE);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function documentant_check($document = 0, $convocatoria = 0) {
+
+        $array = explode('-', $convocatoria);
+        $convocatoria = $array[0];
+        $documentant = $array[1];
+
+        $data['convocatoria'] = $this->call_model->get_conv($convocatoria);
+        //FUNCION CREADA PARA VALIDAR LA CREACION DE USUARIOS DE UNA CONVOCATORIA.
+        $user = $this->register_model->get_userant_convocatoria($document, $convocatoria, $documentant);
+        if (count($user) > 0) {
+            $this->form_validation->set_message('documentant_check', 'El usuario con documento <strong>' . $document . '</strong> ya se encuentra inscrito en la convocatoria: ' . $data['convocatoria'][0]->CONVOCATORIA_NOMBRE);
+            return false;
+        } else {
+            return true;
         }
     }
 

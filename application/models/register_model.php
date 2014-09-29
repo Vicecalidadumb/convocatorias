@@ -13,9 +13,14 @@ class Register_model extends CI_Model {
     }   
     
     public function get_all_cities($id_dep){
+        $Where = '';
+        if($id_dep!='ALL'){
+            $Where = " WHERE DEPARTAMENTO_ID = $id_dep ";
+        }
+        
         $SQL_string = "SELECT CONCAT(DEPARTAMENTO_ID,MUNICIPIO_ID) MUNICIPIO_ID,MUNICIPIO_NOMBRE
                       FROM {$this->db->dbprefix('municipios')} "
-                      . "WHERE DEPARTAMENTO_ID = $id_dep ";
+                      . $Where;
         $SQL_string_query = $this->db->query($SQL_string);
         return $SQL_string_query->result();        
     }
@@ -36,6 +41,16 @@ class Register_model extends CI_Model {
         $SQL_string_query = $this->db->query($SQL_string);
         return $SQL_string_query->result();         
     }
+    
+    public function get_userant_convocatoria($document,$convocatoria,$documentant){
+        $SQL_string = "SELECT *
+                      FROM {$this->db->dbprefix('inscripcion_pin')} "
+                      . "WHERE USUARIO_NUMERODOCUMENTO =  '$document' "
+                      . "AND CONVOCATORIA_ID = '$convocatoria' AND USUARIO_NUMERODOCUMENTO != '$documentant' ";
+        $SQL_string_query = $this->db->query($SQL_string);
+        return $SQL_string_query->result();         
+    }    
+    
     
     public function get_user_offers($INSCRIPCION_PIN){
         $SQL_string = "SELECT *
@@ -103,7 +118,45 @@ class Register_model extends CI_Model {
         }else{
             return false;
         }
-    }    
+    }
+    
+    public function update_user($data){
+        
+        
+        $SQL_string = "UPDATE  {$this->db->dbprefix('usuarios')}
+                      SET
+                        USUARIO_TIPODOCUMENTO='{$data['USUARIO_TIPODOCUMENTO']}',
+                        USUARIO_NOMBRES='{$data['USUARIO_NOMBRES']}',
+                        USUARIO_GENERO='{$data['USUARIO_GENERO']}',
+                        USUARIO_DIRECCIONRESIDENCIA='{$data['USUARIO_DIRECCIONRESIDENCIA']}',
+                        USUARIO_TELEFONOFIJO='{$data['USUARIO_TELEFONOFIJO']}',
+                        USUARIO_CORREO='{$data['USUARIO_CORREO']}',
+                        USUARIO_NUMERODOCUMENTO='{$data['USUARIO_NUMERODOCUMENTO']}',
+                        USUARIO_APELLIDOS='{$data['USUARIO_APELLIDOS']}',
+                        USUARIO_FECHADENACIMIENTO='{$data['USUARIO_FECHADENACIMIENTO']}',
+                        USUARIO_LUGARDENACIMIENTO='{$data['USUARIO_LUGARDENACIMIENTO']}',
+                        USUARIO_LUGARDERESIDENCIA='{$data['USUARIO_LUGARDERESIDENCIA']}',
+                        USUARIO_CELULAR='{$data['USUARIO_CELULAR']}'
+                        WHERE USUARIO_ID = '{$data['USUARIO_ID']}'
+                       ";
+        $insert = $this->db->query($SQL_string);
+
+        if($insert){
+            $SQL_string_ins = "UPDATE {$this->db->dbprefix('inscripcion_pin')}
+                      SET
+                        USUARIO_NUMERODOCUMENTO = '{$data['USUARIO_NUMERODOCUMENTO']}'
+                        WHERE INSCRIPCION_PIN = '{$data['INSCRIPCION_PIN']}'
+                        ";
+            $insert_ins = $this->db->query($SQL_string_ins);
+            if($insert_ins){
+               return $insert_ins;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }        
+    }
     
     public function get_user_inscription($id_user,$id_convocatoria){
         $SQL_string = "SELECT u.*,ip.*,c.*,
@@ -304,19 +357,6 @@ class Register_model extends CI_Model {
         return $SQL_string_query->result();
     }
 
-    public function update_user($data) {
-        $SQL_string = "UPDATE {$this->db->dbprefix('usuarios')} SET
-                       USUARIO_NOMBRES = '{$data['USUARIO_NOMBRES']}', 
-                       USUARIO_APELLIDOS = '{$data['USUARIO_APELLIDOS']}',
-                       USUARIO_TIPODOCUMENTO = '{$data['USUARIO_TIPODOCUMENTO']}',
-                       USUARIO_NUMERODOCUMENTO = '{$data['USUARIO_NUMERODOCUMENTO']}',    
-                       USUARIO_CORREO = '{$data['USUARIO_CORREO']}',
-                       ID_TIPO_USU = '{$data['ID_TIPO_USU']}'
-                       WHERE
-                       USUARIO_ID = {$data['USUARIO_ID']}
-                       ";
-        return $SQL_string_query = $this->db->query($SQL_string);
-    }
 
     public function update_user_g_a($data) {
         $SQL_string = "UPDATE {$this->db->dbprefix('users')} SET

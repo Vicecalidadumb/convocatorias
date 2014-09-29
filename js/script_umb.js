@@ -78,7 +78,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#register_insert').validate({
+    $('#register_insert, #register_update').validate({
         rules: {
             USUARIO_NUMERODOCUMENTO: {
                 minlength: 2,
@@ -98,13 +98,7 @@ $(document).ready(function() {
                 required: true,
                 date: true
             },
-            DEPARTAMENTO_NACIMIENTO: {
-                required: true
-            },
             USUARIO_LUGARDENACIMIENTO: {
-                required: true
-            },
-            DEPARTAMENTO_RESIDENCIA: {
                 required: true
             },
             USUARIO_LUGARDERESIDENCIA: {
