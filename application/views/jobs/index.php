@@ -73,7 +73,7 @@
                         $ARRAY_regiones = explode('-', $oferta->REGIONES);
                         foreach ($ARRAY_regiones as $region) {
                             ?>
-                            <a href="<?php echo base_url('ofertas/index/' . $region) ?>" style="margin-left: 5px;" class="label label-primary">
+                            <a href="<?php echo base_url('ofertas/index/' . base64_encode($region)) ?>" style="margin-left: 5px;" class="label label-primary">
                                 <?php echo $region; ?>
                             </a>
                             <?php
@@ -110,7 +110,7 @@
                 <hr>
                 <h4>Buscar por Regi&oacute;n <small>Clic en la regi&oacute;n deseada para buscar empleos</small></h4>
                 <?php foreach ($regiones as $region) { ?>
-                    <a href="/convocatorias/ofertas/index/<?php echo $region->REGIONAL_NOMBRE ?>" style="margin-left: 5px;" class="label label-primary">
+                    <a href="/ofertas/index/<?php echo base64_encode($region->REGIONAL_NOMBRE) ?>" style="margin-left: 5px;" class="label label-primary">
                         <?php echo $region->REGIONAL_NOMBRE ?>
                     </a>
                 <?php } ?>

@@ -26,7 +26,7 @@
                 <br>
                 <div id="carbonads-container" style="text-align: center">
                     <span class="carbonad-image">
-                        <img src="http://<?php echo $_SERVER['SERVER_NAME'] . '/convocatorias/images/vice/escudo-umb_2.png' ?>">
+                        <img src="http://<?php echo $_SERVER['SERVER_NAME'] . '/images/vice/escudo-umb_2.png' ?>">
                     </span>
                 </div>
             </div>

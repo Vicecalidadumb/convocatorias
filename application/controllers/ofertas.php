@@ -35,8 +35,10 @@ class Ofertas extends CI_Controller {
             $data['validar_busqueda'] = 1;
 
             if ($empleo != '') {
-                $data['palabra_clave'] = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
-                $palabra_clave = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
+                //$data['palabra_clave'] = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
+                //$palabra_clave = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
+                $data['palabra_clave'] = base64_decode($empleo);
+                $palabra_clave = base64_decode($empleo);				
             } else {
                 $data['palabra_clave'] = $this->input->post('empleo', TRUE);
                 $palabra_clave = $this->input->post('empleo', TRUE);

@@ -17,6 +17,22 @@ class Ingreso extends CI_Controller {
     public function index() {
         redirect('', 'refresh');
     }
+    
+    public function mantenimiento() {
+        $data['title'] = 'Pagina en Mantenimiento';
+        
+        $data['template_config'] = array(
+            'signin' => 0,
+            'menu' => 0,
+            'bootstrap-theme' => 0,
+            'jquery' => 0,
+            'validate' => 0,
+            'bootstrapjs' => 0
+        );        
+        
+        $data['content'] = 'login/mantenimiento';
+        $this->load->view('template/template', $data);
+    }    
 
     public function error404() {
         $data['title'] = 'Error 404';
