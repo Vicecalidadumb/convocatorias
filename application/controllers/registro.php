@@ -202,7 +202,7 @@ class Registro extends CI_Controller {
                     $data['content'] = 'register/view_certified_pdf';
 //$DATA = $this->load->view('register/style_pdf', '',true);
                     $DATA = $this->load->view('register/view_certified_pdf', $data, true);
-
+                    $DATA = utf8_decode($DATA);
 //echo $DATA;
                     $path_file = 'certificado_de_registro_' . $data['user'][0]->USUARIO_NUMERODOCUMENTO . '.pdf';
 

@@ -53,6 +53,7 @@ class Documentos extends CI_Controller {
 
                     //$DATA = $this->load->view('register/style_pdf', '',true);
                     $DATA = $this->load->view('documents/certified_pdf', $data, true);
+                    $DATA = utf8_decode($DATA);
 
                     //echo $DATA;
                     $path_file = 'certificado_de_cargue_de_documentos_' . $data['user'][0]->USUARIO_NUMERODOCUMENTO . '.pdf';
