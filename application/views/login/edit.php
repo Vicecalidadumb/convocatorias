@@ -12,7 +12,7 @@
     <?php echo form_input('username', '', 'class="form-control" placeholder="Documento" required autofocus') ?>
     <?php echo form_password('password', '', 'class="form-control" placeholder="Pin" required') ?>
     <br>
-    <button class="btn btn-lg btn-danger btn-block" type="submit">Ingresar</button>
+    <button class="btn btn-lg btn-success btn-block" type="submit">Ingresar</button>
 
     <?php echo form_close(); ?> 
     <?php if ($this->session->flashdata('message')) { ?>

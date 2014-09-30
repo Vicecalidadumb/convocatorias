@@ -1,5 +1,5 @@
 
-<div class="bs-docs-header" id="content" style="margin-bottom: 0px !important;">
+<div class="bs-docs-header" id="content" style="margin-bottom: 0px !important;background: #1e6a1e !important;">
     <div class="container">
         <h1>Editar Datos</h1>
         <p><?php echo $convocatoria[0]->CONVOCATORIA_NOMBRE ?></p>
@@ -30,7 +30,7 @@
     <?php echo validation_errors(); ?>
 
 
-    <div class="panel panel-primary">
+    <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">Informaci&oacute;n Importante</h3>
         </div>

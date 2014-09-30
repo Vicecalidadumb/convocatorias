@@ -28,7 +28,12 @@
         </div>
     <?php } ?>
     <hr>
-    <h3>Datos del Usuario</h3>
+    <h3>
+        Datos del Usuario
+        <a href="<?php echo base_url('ingreso/editar_datos') ?>" class="btn btn-success btn-sm">
+            Editar mis datos
+        </a>
+    </h3>
 
     <table class="table table-striped">
         <tr>

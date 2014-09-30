@@ -74,12 +74,12 @@
                     <tr>
                         <td colspan="2" style="text-align: center">
                             <?php if ($this->session->userdata('logged_in')) { ?>
-                                <a href="<?php echo base_url('ofertas/aplicar/'.'UMB2014' . str_pad($oferta[0]->EMPLEO_ID, 4, "0", STR_PAD_LEFT)) ?>" class="btn btn-success btn-lg" href="" role="button">
+                                <a href="<?php echo base_url('ofertas/aplicar/' . 'UMB2014' . str_pad($oferta[0]->EMPLEO_ID, 4, "0", STR_PAD_LEFT)) ?>" class="btn btn-success btn-lg" href="" role="button">
                                     Aplicar a Esta Oferta
                                     <span class="glyphicon glyphicon-ok"></span>
                                 </a>
                             <?php } else { ?>
-                            <a href="<?php echo base_url('ingreso/convocatoria/'.  encrypt_id(1).'/'.'UMB2014' . str_pad($oferta[0]->EMPLEO_ID, 4, "0", STR_PAD_LEFT)) ?>" class="btn btn-warning btn-lg" title="Debe iniciar sesi&oacute;n para aplicar a esta oferta" role="button">
+                                <a href="<?php echo base_url('ingreso/convocatoria/' . encrypt_id(1) . '/' . 'UMB2014' . str_pad($oferta[0]->EMPLEO_ID, 4, "0", STR_PAD_LEFT)) ?>" class="btn btn-warning btn-lg" title="Debe iniciar sesi&oacute;n para aplicar a esta oferta" role="button">
                                     Iniciar sesi&oacute;n o Registrarse Ahora
                                     <span class="glyphicon glyphicon-user"></span>
                                 </a>
@@ -113,15 +113,16 @@
 
             <?php
             //echo '<pre>' . print_r($ofertas_perfil, true) . '</pre>';
+            $contador = 1;
             foreach ($ofertas as $oferta) {
                 ?>
-                <li class="media">
+                <div class="media">
                     <!--<a class="pull-left" href="#">
                             <img class="media-object" alt="64x64" src="<?php echo base_url("images/vice/64/programming_64x64.png") ?>" style="width: 64px; height: 64px;">
                         </a>-->
                     <div class="media-body">
                         <h3 class="media-heading">
-                            <?php echo $oferta->EMPLEO_DESCRIPCION ?> <small><?php echo 'UMB2014' . str_pad($oferta->EMPLEO_ID, 4, "0", STR_PAD_LEFT); ?></small>
+                            <?php echo '<small>' . $contador . ')</small> ' . $oferta->EMPLEO_DESCRIPCION ?> <small><?php echo 'UMB2014' . str_pad($oferta->EMPLEO_ID, 4, "0", STR_PAD_LEFT); ?></small>
                         </h3>
                         <h4 class="media-heading">
                             <small>Perfil: </small><?php echo $oferta->PERFIL ?>
@@ -149,8 +150,38 @@
                             <span class="glyphicon glyphicon-share-alt"></span>
                         </a>                    
                     </div>
-                </li>
-            <?php } ?>
+                </div>
+                <hr>
+                <?php
+                $contador++;
+            }
+            ?>
+
+            <div class="jumbotron">
+                <h3>Nueva B&uacute;squeda <small>Puede realizar la b&uacute;squeda por palabra clave, regi&oacute;n o codigo de empleo</small></h3>
+                <form class="form-horizontal" action="<?php echo base_url('/ofertas/') ?>" method="POST" role="form">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-briefcase"></span>
+                        </div>
+                        <input class="form-control" value="<?php echo (isset($validar_busqueda) && $validar_busqueda) ? $palabra_clave : ''; ?>" name="empleo" type="text" placeholder="Palabra Clave">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Buscar Empleos</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4>Buscar por Regi&oacute;n <small>Clic en la regi&oacute;n deseada para buscar empleos</small></h4>
+                    <?php foreach ($regiones as $region) { ?>
+                        <a href="/convocatorias/ofertas/index/<?php echo $region->REGIONAL_NOMBRE ?>" style="margin-left: 5px;" class="label label-primary">
+                            <?php echo $region->REGIONAL_NOMBRE ?>
+                        </a>
+                    <?php } ?>
+                </form>
+            </div>            
+
         </div>
     </div>
 </div>

@@ -121,6 +121,7 @@ class Register_model extends CI_Model {
 
     public function update_user($data) {
 
+
         $SQL_string = "UPDATE  {$this->db->dbprefix('usuarios')}
                       SET
                         USUARIO_TIPODOCUMENTO='{$data['USUARIO_TIPODOCUMENTO']}',
@@ -163,12 +164,12 @@ class Register_model extends CI_Model {
             
                       (
                       SELECT m.MUNICIPIO_NOMBRE 
-                      FROM cargue_municipios m WHERE CONCAT(m.DEPARTAMENTO_ID,MUNICIPIO_ID) = u.USUARIO_LUGARDENACIMIENTO
+                      FROM cargue_municipios m WHERE CONCAT(m.DEPARTAMENTO_ID,MUNICIPIO_ID) = u.USUARIO_LUGARDENACIMIENTO LIMIT 1
                       ) USUARIO_LUGARDENACIMIENTO_N,
                       
                       (
                       SELECT m.MUNICIPIO_NOMBRE 
-                      FROM cargue_municipios m WHERE CONCAT(m.DEPARTAMENTO_ID,MUNICIPIO_ID) = u.USUARIO_LUGARDERESIDENCIA
+                      FROM cargue_municipios m WHERE CONCAT(m.DEPARTAMENTO_ID,MUNICIPIO_ID) = u.USUARIO_LUGARDERESIDENCIA LIMIT 1
                       ) USUARIO_LUGARDERESIDENCIA_N   
                       
                       FROM {$this->db->dbprefix('usuarios')} u,

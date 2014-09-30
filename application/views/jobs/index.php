@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Oferta de Empleos</h1>
         <p>Convocatoria de entidad del Orden Nacional, 
-            proceso para la conformaci&oacute;n del banco de hojas de vida.</p>
+            proceso para la conformaci&oacute;n del banco de hojas de vida de la Defensor&iacute;a del Pueblo</p>
         <p>&nbsp;</p>
         <div id="carbonads-container">
             <div class="carbonad">
@@ -44,19 +44,20 @@
 
         <?php
         //echo '<pre>' . print_r($ofertas_perfil, true) . '</pre>';
+        $contador = 1;
         foreach ($ofertas as $oferta) {
             if ($validar_busqueda) {
                 $oferta->PERFIL = str_ireplace($palabra_clave, '<span style="background-color: yellow !important;">' . $palabra_clave . '</span>', $oferta->PERFIL);
                 $oferta->EMPLEO_PROPOSITO = str_ireplace($palabra_clave, '<span style="background-color: yellow !important;">' . $palabra_clave . '</span>', $oferta->EMPLEO_PROPOSITO);
             }
             ?>
-            <li class="media">
+            <div class="media">
                 <!--<a class="pull-left" href="#">
                         <img class="media-object" alt="64x64" src="<?php echo base_url("images/vice/64/programming_64x64.png") ?>" style="width: 64px; height: 64px;">
                     </a>-->
                 <div class="media-body">
                     <h3 class="media-heading">
-                        <?php echo $oferta->EMPLEO_DESCRIPCION ?> <small><?php echo 'UMB2014' . str_pad($oferta->EMPLEO_ID, 4, "0", STR_PAD_LEFT); ?></small>
+                        <?php echo '<small>' . $contador . ')</small> ' . $oferta->EMPLEO_DESCRIPCION ?> <small><?php echo 'UMB2014' . str_pad($oferta->EMPLEO_ID, 4, "0", STR_PAD_LEFT); ?></small>
                     </h3>
                     <h4 class="media-heading">
                         <small>Perfil: </small><?php echo $oferta->PERFIL ?>
@@ -79,14 +80,43 @@
                         }
                         ?>
                     </p>
-                    <a href="<?php echo base_url('ofertas/informacion/' . encrypt_id_v2($oferta->EMPLEO_ID)) ?>" class="btn btn-warning btn-xs">
+                    <a href="<?php echo base_url('ofertas/informacion/' . encrypt_id_v2($oferta->EMPLEO_ID)) ?>" class="btn btn-warning btn-sm">
                         Mas Informaci&oacute;n
                         <span class="glyphicon glyphicon-share-alt"></span>
                     </a>                    
                 </div>
-            </li>
+            </div>
             <hr>
-        <?php } ?>
+            <?php
+            $contador++;
+        }
+        ?>
+
+        <div class="jumbotron">
+            <h3>Nueva B&uacute;squeda <small>Puede realizar la b&uacute;squeda por palabra clave, regi&oacute;n o codigo de empleo</small></h3>
+            <form class="form-horizontal" action="<?php echo base_url('/ofertas/') ?>" method="POST" role="form">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-briefcase"></span>
+                    </div>
+                    <input class="form-control" value="<?php echo (isset($validar_busqueda) && $validar_busqueda) ? $palabra_clave : ''; ?>" name="empleo" type="text" placeholder="Palabra Clave">
+                </div>
+                <br>
+                <div class="input-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Buscar Empleos</button>
+                    </div>
+                </div>
+                <hr>
+                <h4>Buscar por Regi&oacute;n <small>Clic en la regi&oacute;n deseada para buscar empleos</small></h4>
+                <?php foreach ($regiones as $region) { ?>
+                    <a href="/convocatorias/ofertas/index/<?php echo $region->REGIONAL_NOMBRE ?>" style="margin-left: 5px;" class="label label-primary">
+                        <?php echo $region->REGIONAL_NOMBRE ?>
+                    </a>
+                <?php } ?>
+            </form>
+        </div>
     </div>
+
+    <br><br>
 </div>
-<br><br>

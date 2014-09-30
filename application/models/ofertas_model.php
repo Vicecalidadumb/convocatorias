@@ -89,6 +89,14 @@ class Ofertas_model extends CI_Model {
         $sql_query = $this->db->query($sql_string);
         return $sql_query->result();
     }
+    
+    public function get_regiones(){
+        $sql_string = "SELECT *
+                      FROM {$this->db->dbprefix('regional')} ORDER BY REGIONAL_NOMBRE";
+
+        $sql_query = $this->db->query($sql_string);
+        return $sql_query->result();        
+    }
 
     public function insert_offer($data) {
         $sql_string = "SELECT * FROM {$this->db->dbprefix('oferta_ins')} WHERE INSCRIPCION_PIN='{$data['INSCRIPCION_PIN']}' AND EMPLEO_ID!='{$data['EMPLEO_ID']}' AND ESTADO=1 GROUP BY EMPLEO_ID";
