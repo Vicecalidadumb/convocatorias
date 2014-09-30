@@ -105,16 +105,18 @@ class Ofertas extends CI_Controller {
                     if (count($data['oferta']) > 0) {
 
                         $ARRAY_regiones = explode('-', $data['oferta'][0]->REGIONES_ID);
+                        $data_ = explode(',', $ARRAY_regiones[0]);
                         if (count($ARRAY_regiones) == 1) {
                             $data = array(
                                 'INSCRIPCION_PIN' => $this->session->userdata('INSCRIPCION_PIN'),
                                 'EMPLEO_ID' => $data['oferta'][0]->EMPLEO_ID,
-                                'REGIONAL_ID' => trim($ARRAY_regiones[0], '-'),
+                                'REGIONAL_ID' => trim($data_[0], '-'),
                                 'MAXIMO_EMPLEOS' => $data['convocatoria'][0]->MAXIMO_EMPLEOS,
                                 'MAXIMO_REGIONES' => $data['convocatoria'][0]->MAXIMO_REGIONES
                             );
                             $insert = $this->ofertas_model->insert_offer($data);
                             $this->session->set_flashdata(array('message' => 'Ofertas actualizadas con exito', 'message_type' => 'info'));
+                            //exit();
                             redirect('ingreso/constancia', 'refresh');
                         }
 
