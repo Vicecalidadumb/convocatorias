@@ -19,7 +19,7 @@ $lang['upload_not_writable'] = "The upload destination folder does not appear to
  */
 
 $lang['upload_userfile_not_set'] = "No se puede encontrar una variable post."; 
-$lang['upload_file_exceeds_limit'] = "El archivo subido excede el tama&ntilde;o m&aacute;ximo permitido en el archivo de configuraci&oacute;n de PHP."; 
+$lang['upload_file_exceeds_limit'] = "El archivo subido excede el tama&ntilde;o m&aacute;ximo permitido en el archivo de configuraci&oacute;n."; 
 $lang['upload_file_exceeds_form_limit'] = "El archivo subido excede el tama&ntilde;o m&aacute;ximo permitido por la forma de presentaci&oacute;n."; 
 $lang['upload_file_partial'] = "El archivo ha sido s&oacute;lo parcialmente subido."; 
 $lang['upload_no_temp_directory'] = "La carpeta temporal no se encuentra."; 
