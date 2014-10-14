@@ -45,14 +45,30 @@
 
         <p style="text-align: right !important;">
             <?php if (!$this->session->userdata('politicas')) { ?>
-                <a href="<?php echo base_url("ingreso/politicasok") ?>" class="btn btn-danger btn-lg" role="button">
-                    Aceptar
-                </a>
-            <?php } else { ?>
-                <a href="<?php echo base_url("especificos") ?>" class="btn btn-success btn-lg" role="button">
-                    Ir al paso 1: Documentos Especificos
-                </a>        
+                <?php if (count($ofertas) > 0) { ?>
+                    <a href="<?php echo base_url("ingreso/politicasok") ?>" class="btn btn-danger btn-lg" role="button">
+                        Aceptar
+                    </a>
+                <?php } else { ?>
+                    <br><br>
+                <div class="alert alert-danger" role="alert">
+                    <strong>
+                        Error: No puede continuar con el proceso de cargue de documentos 
+                    </strong>
+                    <br><br>
+                    Usted todav&iacute;a no ha aplicado a una Oferta de Empleo, 
+                    para aplicar a una, por favor ingrese a Ofertas de Empleo dando clic 
+                    <a href="<?php echo base_url('ofertas'); ?>" target="_blank">Aqu&iacute;</a>, 
+                    busque la oferta que le interesa y de clic en "Aplicar a esta oferta", 
+                    luego vuelva a esta p&aacute;gina y rec&aacute;rguela para seguir con el proceso 
+                    de cargue de documentos.
+                </div>                
             <?php } ?>
+        <?php } else { ?>
+            <a href="<?php echo base_url("especificos") ?>" class="btn btn-success btn-lg" role="button">
+                Ir al paso 1: Documentos Especificos
+            </a>        
+        <?php } ?>
         </p>
     </div>
 </div>

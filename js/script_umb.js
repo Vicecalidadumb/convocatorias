@@ -17,8 +17,8 @@ $(document).ready(function() {
             },
             FECHA_TERMINACION: {
                 minlength: 10,
-                required: true,
-                date: true
+                required: true/*,
+                date: true*/
             },
             FECHA_GRADO: {
                 minlength: 10,
@@ -45,8 +45,8 @@ $(document).ready(function() {
             },
             FECHA_TERMINACION: {
                 minlength: 10,
-                required: true,
-                date: true
+                required: true/*,
+                date: true*/
             }
         },
         highlight: function(element) {
@@ -64,13 +64,13 @@ $(document).ready(function() {
             },
             FECHA_INICIO: {
                 minlength: 10,
-                required: true,
-                date: true
+                required: true/*,
+                date: true*/
             },
             FECHA_FIN: {
                 minlength: 10,
-                required: true,
-                date: true
+                required: true/*,
+                date: true*/
             }
         },
         highlight: function(element) {
@@ -78,7 +78,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#register_insert, #register_update').validate({
+    $('#register_insert').validate({
         rules: {
             USUARIO_NUMERODOCUMENTO: {
                 minlength: 2,
@@ -95,10 +95,16 @@ $(document).ready(function() {
             },
             USUARIO_FECHADENACIMIENTO: {
                 minlength: 10,
-                required: true,
-                date: true
+                required: true/*,
+                date: true*/
+            },
+            DEPARTAMENTO_NACIMIENTO: {
+                required: true
             },
             USUARIO_LUGARDENACIMIENTO: {
+                required: true
+            },
+            DEPARTAMENTO_RESIDENCIA: {
                 required: true
             },
             USUARIO_LUGARDERESIDENCIA: {

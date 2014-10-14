@@ -290,7 +290,7 @@ class Ingreso extends CI_Controller {
                     redirect('escritorio', 'location');
                 }
             } else {
-                $this->session->set_flashdata(array('message' => '<strong>Error:</strong> Pin Incorrecto.', 'message_type' => 'danger'));
+                $this->session->set_flashdata(array('message' => '<strong>Error:</strong> Error al ingresar.', 'message_type' => 'danger'));
 
                 if ($this->input->post('certified')) {
                     redirect('ingreso/constancia', 'refresh');

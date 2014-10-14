@@ -167,7 +167,7 @@ class Registro extends CI_Controller {
                     }
                 } else {
                     $this->session->set_flashdata(array('message' => 'Error al agregar el registro', 'message_type' => 'danger'));
-                    redirect('registro/nuevo', 'refresh');
+                    redirect('registro/nuevo/MTM1MzM1MTMzODgz', 'refresh');
                 }
             }
         } else {
@@ -230,38 +230,45 @@ class Registro extends CI_Controller {
         $id_user = $this->session->userdata('USUARIO_ID');
         $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
 
+        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
 
-        if ($id_user != '') {
-            $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
-            $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
+        if (count($data['convocatoria']) > 0) {
 
-            $data['departments_1'] = get_dropdown($this->register_model->get_all_departments(), 'DEPARTAMENTO_ID', 'DEPARTAMENTO_NOMBRE');
-            $data['departments_1'][''] = '--SELECCIONE UN DEPARTAMENTO--';
-            asort($data['departments_1']);
+            if ($id_user != '') {
+                $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
+                $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
 
-            $data['departments_2'] = $data['departments_1'];
-            $data['convocatorias'] = get_dropdown($this->register_model->get_all_calls(), 'CONVOCATORIA_ID', 'CONVOCATORIA_NOMBRE');
+                $data['departments_1'] = get_dropdown($this->register_model->get_all_departments(), 'DEPARTAMENTO_ID', 'DEPARTAMENTO_NOMBRE');
+                $data['departments_1'][''] = '--SELECCIONE UN DEPARTAMENTO--';
+                asort($data['departments_1']);
 
-            $data['mun'] = get_dropdown($this->register_model->get_all_cities('ALL'), 'MUNICIPIO_ID', 'MUNICIPIO_NOMBRE');
+                $data['departments_2'] = $data['departments_1'];
+                $data['convocatorias'] = get_dropdown($this->register_model->get_all_calls(), 'CONVOCATORIA_ID', 'CONVOCATORIA_NOMBRE');
 
-            $data['tipos_documentos'] = get_tipos_documentos();
+                $data['mun'] = get_dropdown($this->register_model->get_all_cities('ALL'), 'MUNICIPIO_ID', 'MUNICIPIO_NOMBRE');
 
-            $data['title'] = 'Editar datos del Aspirantes';
+                $data['tipos_documentos'] = get_tipos_documentos();
 
-            $data['template_config'] = array(
-                'signin' => 0,
-                'menu' => 1,
-                'bootstrap-theme' => 0,
-                'jquery' => 1,
-                'validate' => 1,
-                'bootstrapjs' => 1
-            );
+                $data['title'] = 'Editar datos del Aspirantes';
 
-            $data['content'] = 'register/edit';
-            $this->load->view('template/template', $data);
+                $data['template_config'] = array(
+                    'signin' => 0,
+                    'menu' => 1,
+                    'bootstrap-theme' => 0,
+                    'jquery' => 1,
+                    'validate' => 1,
+                    'bootstrapjs' => 1
+                );
+
+                $data['content'] = 'register/edit';
+                $this->load->view('template/template', $data);
+            } else {
+                $this->session->set_flashdata(array('message' => 'Error al Consultar el Registro', 'message_type' => 'warning'));
+                redirect('user', 'refresh');
+            }
         } else {
-            $this->session->set_flashdata(array('message' => 'Error al Consultar el Registro', 'message_type' => 'warning'));
-            redirect('user', 'refresh');
+            $this->session->set_flashdata(array('message' => 'Convocatoria no encontrada o fuera de fechas.', 'message_type' => 'danger'));
+            redirect('', 'refresh');
         }
     }
 
