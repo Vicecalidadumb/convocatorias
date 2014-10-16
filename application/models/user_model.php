@@ -25,6 +25,25 @@ class User_model extends CI_Model {
         return $sql_query->result();        
     }
     
+    public function get_user_loginpin_nodate($username,$pass){
+        $sql_string = "SELECT u.*,i.*,c.*,co.*
+                      FROM {$this->db->dbprefix('usuarios')} u,
+                      {$this->db->dbprefix('inscripcion_pin')} i,
+                      {$this->db->dbprefix('convocatorias')} c,
+                      {$this->db->dbprefix('configuracion')} co
+                      WHERE 
+                      c.CONVOCATORIA_ID = co.CONVOCATORIA_ID
+                      AND u.USUARIO_NUMERODOCUMENTO = i.USUARIO_NUMERODOCUMENTO
+                      AND c.CONVOCATORIA_ID = i.CONVOCATORIA_ID
+                      AND u.USUARIO_NUMERODOCUMENTO = '{$username}'
+                      AND i.INSCRIPCION_PIN = '{$pass}'  
+                      
+                      AND u.USUARIO_ESTADO=1";
+        //echo $sql_string;
+        $sql_query = $this->db->query($sql_string);
+        return $sql_query->result();          
+    }
+    
     public function get_user_documento($username){
         $sql_string = "SELECT *
                       FROM {$this->db->dbprefix('usuarios')}

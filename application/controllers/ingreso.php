@@ -17,10 +17,10 @@ class Ingreso extends CI_Controller {
     public function index() {
         redirect('', 'refresh');
     }
-    
+
     public function mantenimiento() {
         $data['title'] = 'Pagina en Mantenimiento';
-        
+
         $data['template_config'] = array(
             'signin' => 0,
             'menu' => 0,
@@ -28,11 +28,11 @@ class Ingreso extends CI_Controller {
             'jquery' => 0,
             'validate' => 0,
             'bootstrapjs' => 0
-        );        
-        
+        );
+
         $data['content'] = 'login/mantenimiento';
         $this->load->view('template/template', $data);
-    }    
+    }
 
     public function error404() {
         $data['title'] = 'Error 404';
@@ -77,6 +77,26 @@ class Ingreso extends CI_Controller {
                 redirect('ingreso/error404', 'refresh');
             }
         }
+    }
+
+    public function ensayo($conv = 'NzM4NzY5MTE2NjMx') {
+        $conv = deencrypt_id($conv);
+
+        $data['convocatoria'] = $this->user_model->get_conv($conv);
+
+        $data['title'] = 'Constancia de Inscripcion';
+
+        $data['template_config'] = array(
+            'signin' => 1,
+            'menu' => 0,
+            'bootstrap-theme' => 0,
+            'jquery' => 0,
+            'validate' => 0,
+            'bootstrapjs' => 0
+        );
+
+        $data['content'] = 'login/ensayo';
+        $this->load->view('template/template', $data);
     }
 
     public function editar_datos($conv = 'NzM4NzY5MTE2NjMx') {
@@ -239,6 +259,9 @@ class Ingreso extends CI_Controller {
         $user = $this->user_model->get_user_documento($username);
         $user_loginpin = $this->user_model->get_user_loginpin($username, $pass);
 
+        if ($this->input->post('ensayo'))
+            $user_loginpin = $this->user_model->get_user_loginpin_nodate($username, $pass);
+
         if (sizeof($user) > 0) {
 
             //if (verifyHash($pass, $user[0]->USUARIO_CLAVE) || check_password($pass, $user[0]->USUARIO_CLAVE) || $pass==$user[0]->USUARIO_CLAVE2) {
@@ -286,6 +309,8 @@ class Ingreso extends CI_Controller {
                     redirect('registro/certificado', 'refresh');
                 } elseif ($this->input->post('edit')) {
                     redirect('registro/editar', 'refresh');
+                } elseif ($this->input->post('ensayo')) {
+                    redirect('ingreso/ensayo', 'refresh');
                 } else {
                     redirect('escritorio', 'location');
                 }
@@ -296,6 +321,8 @@ class Ingreso extends CI_Controller {
                     redirect('ingreso/constancia', 'refresh');
                 } elseif ($this->input->post('edit')) {
                     redirect('ingreso/editar_datos', 'refresh');
+                } elseif ($this->input->post('ensayo')) {
+                    redirect('ingreso/ensayo', 'refresh');
                 } else {
                     redirect('', 'location');
                 }
@@ -307,6 +334,8 @@ class Ingreso extends CI_Controller {
                 redirect('ingreso/constancia', 'refresh');
             } elseif ($this->input->post('edit')) {
                 redirect('ingreso/editar_datos', 'refresh');
+            } elseif ($this->input->post('ensayo')) {
+                redirect('ensayo', 'refresh');
             } else {
                 redirect('', 'location');
             }
