@@ -52,7 +52,7 @@ class Ensayo extends CI_Controller {
             $id_user = $this->session->userdata('USUARIO_ID');
             $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
 
-            $data['convocatoria'] = $this->call_model->get_conv_ens($id_convocatoria);
+            $data['convocatoria'] = $this->call_model->get_conv_ens($id_convocatoria,$this->session->userdata('INSCRIPCION_PIN'));
 
             if (count($data['convocatoria']) > 0) {
 

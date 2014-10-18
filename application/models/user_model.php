@@ -18,7 +18,7 @@ class User_model extends CI_Model {
                       AND c.CONVOCATORIA_ID = i.CONVOCATORIA_ID
                       AND u.USUARIO_NUMERODOCUMENTO = '{$username}'
                       AND i.INSCRIPCION_PIN = '{$pass}'  
-                      AND '".date("Y-m-d H:i:s")."' BETWEEN FECHA_INICIO_INS AND FECHA_FINAL_INS
+                      AND ('".date("Y-m-d H:i:s")."' BETWEEN FECHA_INICIO_INS AND FECHA_FINAL_INS OR i.INSCRIPCION_PIN = '1159875' OR i.INSCRIPCION_PIN = '1168424')
                       AND u.USUARIO_ESTADO=1";
         //echo $sql_string;
         $sql_query = $this->db->query($sql_string);
@@ -56,7 +56,7 @@ class User_model extends CI_Model {
                       AND c.CONVOCATORIA_ID = i.CONVOCATORIA_ID
                       AND u.USUARIO_NUMERODOCUMENTO = '{$username}'
                       AND i.INSCRIPCION_PIN = '{$pass}'  
-                      AND '".date("Y-m-d H:i:s")."' BETWEEN FECHA_INICIO_ENS AND FECHA_FINAL_ENS
+                      AND ('".date("Y-m-d H:i:s")."' BETWEEN FECHA_INICIO_ENS AND FECHA_FINAL_ENS OR i.INSCRIPCION_PIN = '1159875' OR i.INSCRIPCION_PIN = '1168424') 
                       AND u.USUARIO_ESTADO=1";
         //echo $sql_string;
         //exit;

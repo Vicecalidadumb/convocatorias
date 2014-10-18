@@ -9,7 +9,7 @@ function validate_login($logged_in) {
 
         /////////////////VALIDAR FECHA DE CONVOCATORIA
         $CI->load->model('call_model');
-        $convocatoria = $CI->call_model->get_conv($CI->session->userdata('CONVOCATORIA_ID'));
+        $convocatoria = $CI->call_model->get_conv($CI->session->userdata('CONVOCATORIA_ID'),$CI->session->userdata('INSCRIPCION_PIN'));
         if (count($convocatoria) == 0) {
             $CI->session->set_userdata('logged_in', FALSE);
             $CI->session->set_flashdata(array('message' => 'Convocatoria no encontrada o fuera de fechas.', 'message_type' => 'danger'));
