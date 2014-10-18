@@ -12,6 +12,7 @@ class Ingreso extends CI_Controller {
         $this->load->helper('security');
         $this->load->helper('miscellaneous');
         //$this->load->library('My_PHPMailer');
+        date_default_timezone_set('America/Bogota');
     }
 
     public function index() {
@@ -90,8 +91,8 @@ class Ingreso extends CI_Controller {
             'signin' => 1,
             'menu' => 0,
             'bootstrap-theme' => 0,
-            'jquery' => 0,
-            'validate' => 0,
+            'jquery' => 1,
+            'validate' => 1,
             'bootstrapjs' => 0
         );
 
@@ -260,7 +261,7 @@ class Ingreso extends CI_Controller {
         $user_loginpin = $this->user_model->get_user_loginpin($username, $pass);
 
         if ($this->input->post('ensayo'))
-            $user_loginpin = $this->user_model->get_user_loginpin_nodate($username, $pass);
+            $user_loginpin = $this->user_model->get_user_loginpin_ens($username, $pass);
 
         if (sizeof($user) > 0) {
 
@@ -291,6 +292,9 @@ class Ingreso extends CI_Controller {
                     'INSCRIPCION_PIN' => $user_loginpin[0]->INSCRIPCION_PIN,
                     'FECHA_INICIO_INS' => $user_loginpin[0]->FECHA_INICIO_INS,
                     'FECHA_FINAL_INS' => $user_loginpin[0]->FECHA_FINAL_INS,
+                    'FECHA_INICIO_ENS' => $user_loginpin[0]->FECHA_INICIO_ENS,
+                    'FECHA_FINAL_ENS' => $user_loginpin[0]->FECHA_FINAL_ENS,                    
+                    'MAXIMO_SEG_ENSAYO' => $user_loginpin[0]->MAXIMO_SEG_ENSAYO,
                     'ID_TIPO_USU' => $user_loginpin[0]->ID_TIPO_USU,
                     'rol_permissions' => $rol_permissions,
                     'logged_in' => TRUE,
@@ -310,7 +314,7 @@ class Ingreso extends CI_Controller {
                 } elseif ($this->input->post('edit')) {
                     redirect('registro/editar', 'refresh');
                 } elseif ($this->input->post('ensayo')) {
-                    redirect('ingreso/ensayo', 'refresh');
+                    redirect('ensayo', 'refresh');
                 } else {
                     redirect('escritorio', 'location');
                 }
@@ -328,14 +332,14 @@ class Ingreso extends CI_Controller {
                 }
             }
         } else {
-            $this->session->set_flashdata(array('message' => 'Su n&uacute;mero de documento no se encuentra registrado en el sistema, por favor reg&iacute;strese dando clic en el boton "Registrarse"', 'message_type' => 'warning'));
+            $this->session->set_flashdata(array('message' => 'Su n&uacute;mero de documento no se encuentra registrado en el sistema', 'message_type' => 'warning'));
 
             if ($this->input->post('certified')) {
                 redirect('ingreso/constancia', 'refresh');
             } elseif ($this->input->post('edit')) {
                 redirect('ingreso/editar_datos', 'refresh');
             } elseif ($this->input->post('ensayo')) {
-                redirect('ensayo', 'refresh');
+                redirect('ingreso/ensayo', 'refresh');
             } else {
                 redirect('', 'location');
             }

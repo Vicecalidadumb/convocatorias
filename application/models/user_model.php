@@ -44,6 +44,26 @@ class User_model extends CI_Model {
         return $sql_query->result();          
     }
     
+    public function get_user_loginpin_ens($username,$pass){
+        $sql_string = "SELECT u.*,i.*,c.*,co.*
+                      FROM {$this->db->dbprefix('usuarios')} u,
+                      {$this->db->dbprefix('inscripcion_pin')} i,
+                      {$this->db->dbprefix('convocatorias')} c,
+                      {$this->db->dbprefix('configuracion')} co
+                      WHERE 
+                      c.CONVOCATORIA_ID = co.CONVOCATORIA_ID
+                      AND u.USUARIO_NUMERODOCUMENTO = i.USUARIO_NUMERODOCUMENTO
+                      AND c.CONVOCATORIA_ID = i.CONVOCATORIA_ID
+                      AND u.USUARIO_NUMERODOCUMENTO = '{$username}'
+                      AND i.INSCRIPCION_PIN = '{$pass}'  
+                      AND '".date("Y-m-d H:i:s")."' BETWEEN FECHA_INICIO_ENS AND FECHA_FINAL_ENS
+                      AND u.USUARIO_ESTADO=1";
+        //echo $sql_string;
+        //exit;
+        $sql_query = $this->db->query($sql_string);
+        return $sql_query->result();          
+    }    
+    
     public function get_user_documento($username){
         $sql_string = "SELECT *
                       FROM {$this->db->dbprefix('usuarios')}

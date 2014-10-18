@@ -12,75 +12,123 @@ class Ensayo extends CI_Controller {
         //DEFINIMOS EL NOMBRE DEL MODULO
         //$this->module_sigla = 'USU';
         $this->load->model('user_model');
-        $this->load->model('register_model');
+        //$this->load->model('register_model');
         $this->load->model('call_model');
+        $this->load->model('ensayo_model');
         $this->load->helper('miscellaneous');
         //$this->load->library('My_RECAPTCHA');
+        date_default_timezone_set('America/Bogota');
     }
 
     public function index() {
-
         if ($this->session->userdata('logged_in') == FALSE) {
-            echo "error session";
             $this->session->set_flashdata(array('message' => '<strong>Error</strong> Debe Iniciar una Sesion.', 'message_type' => 'danger'));
-            //redirect('ingreso/ensayo', 'refresh');
+            redirect('ingreso/ensayo', 'refresh');
         } else {
-            
+
+            $id_user = $this->session->userdata('USUARIO_ID');
+            $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
+
+            $data['title'] = 'Ensayo Virtual';
+            $data['content'] = 'ensayo/add';
+
+            $data['template_config'] = array(
+                'signin' => 0,
+                'menu' => 1,
+                'bootstrap-theme' => 0,
+                'jquery' => 1,
+                'validate' => 1,
+                'bootstrapjs' => 1
+            );
+            $this->load->view('template/template_ensayo', $data);
         }
+    }
+
+    public function insert() {
+        if ($this->session->userdata('logged_in') == FALSE) {
+            $this->session->set_flashdata(array('message' => '<strong>Error</strong> Debe Iniciar una Sesion.', 'message_type' => 'danger'));
+            redirect('ingreso/ensayo', 'refresh');
+        } else {
+            $id_user = $this->session->userdata('USUARIO_ID');
+            $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
+
+            $data['convocatoria'] = $this->call_model->get_conv_ens($id_convocatoria);
+
+            if (count($data['convocatoria']) > 0) {
 
 
+                //VERIFICAR LA EXISTENCIA DEL ENSAYO
+                $data['ensayo'] = $this->ensayo_model->get_ensayo($this->session->userdata('INSCRIPCION_PIN'));
+                if (count($data['ensayo']) == 0) {
+                    $data = array(
+                        'INSCRIPCION_PIN' => $this->session->userdata('INSCRIPCION_PIN'),
+                        'ENSAYO_TEXTO' => '',
+                        'ENSAYO_IP' => $_SERVER['REMOTE_ADDR'],
+                        'ENSAYO_FECHA_MOD' => date("Y-m-d H:i:s")
+                    );
+                    $insert = $this->ensayo_model->insert($data);
+                    if ($insert) {
+                        $data['ensayo'] = $this->ensayo_model->get_ensayo($this->session->userdata('INSCRIPCION_PIN'));
+                    } else {
+                        $this->session->set_userdata('logged_in', FALSE);
+                        $this->session->sess_destroy();
+                        $this->session->set_flashdata(array('message' => 'Error al iniciar el ensayo, por favor intentelo de nuevo.', 'message_type' => 'danger'));
+                        redirect('ingreso/ensayo', 'location');
+                    }
+                } else {
+                    if ($this->input->post()) {
+                        $data = array(
+                            'INSCRIPCION_PIN' => $this->session->userdata('INSCRIPCION_PIN'),
+                            'ENSAYO_TEXTO' => addslashes(mb_strtoupper($this->input->post('ENSAYO_TEXTO', TRUE), 'utf-8')),
+                            'ENSAYO_FECHA_MOD' => date("Y-m-d H:i:s"),
+                            'ENSAYO_FECHA' => $data['ensayo'][0] ->ENSAYO_FECHA,
+                            'MAXIMO_SEG_ENSAYO' => $this->session->userdata('MAXIMO_SEG_ENSAYO')
+                        );
+                        $update = $this->ensayo_model->update($data);
+                        if ($update) {
+                            $this->session->set_flashdata(array('message' => 'Exito al guardar el ensayo.', 'message_type' => 'info'));
+                            redirect('ensayo/insert', 'location');
+                        } else {
+                            $this->session->set_flashdata(array('message' => 'Error al guardar el ensayo, fecha limite sobrepasada.', 'message_type' => 'danger'));
+                            redirect('ensayo/insert', 'location');
+                        }
+                    }
+                    //
+                }
+                if (count($data['ensayo']) > 0) {
 
-        /*
-         * 
+                    $data['title'] = 'Ensayo Virtual';
+                    $data['content'] = 'ensayo/new';
+                    $data['template_config'] = array(
+                        'signin' => 0,
+                        'menu' => 1,
+                        'bootstrap-theme' => 0,
+                        'jquery' => 1,
+                        'validate' => 1,
+                        'bootstrapjs' => 1
+                    );
 
-          $id_user = $this->session->userdata('USUARIO_ID');
-          $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
+                    $this->load->view('template/template_ensayo', $data);
+                } else {
+                    $this->session->set_userdata('logged_in', FALSE);
+                    $this->session->sess_destroy();
+                    $this->session->set_flashdata(array('message' => 'Error al consultar el ensayo, por favor intentelo de nuevo.', 'message_type' => 'danger'));
+                    redirect('ingreso/ensayo', 'location');
+                }
+            } else {
+                $this->session->set_userdata('logged_in', FALSE);
+                $this->session->sess_destroy();
+                $this->session->set_flashdata(array('message' => 'Ensayo fuera de fechas.', 'message_type' => 'danger'));
+                redirect('ingreso/ensayo', 'location');
+            }
+        }
+    }
 
-          if ($id_user != '') {
-          $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
-          $data['ofertas'] = $this->register_model->get_user_offers($data['user'][0]->INSCRIPCION_PIN);
-          //echo '<pre>'.print_r($user,true).'</pre>';
-          if (count($data['user']) > 0) {
-          $data['title'] = 'Certificado de Registro';
-          $data['content'] = 'register/view_certified';
-
-          $data['template_config'] = array(
-          'signin' => 0,
-          'menu' => 1,
-          'bootstrap-theme' => 0,
-          'jquery' => 1,
-          'validate' => 1,
-          'bootstrapjs' => 1
-          );
-
-          if ($view_pdf == 1) {
-          $this->load->library('My_PDF');
-          $data['content'] = 'register/view_certified_pdf';
-          //$DATA = $this->load->view('register/style_pdf', '',true);
-          $DATA = $this->load->view('register/view_certified_pdf', $data, true);
-          $DATA = utf8_decode($DATA);
-          //echo $DATA;
-          $path_file = 'certificado_de_registro_' . $data['user'][0]->USUARIO_NUMERODOCUMENTO . '.pdf';
-
-          $html2pdf = new HTML2PDF('V', 'LETTER', 'fr', true, 'UTF-8', 0);
-          //$html2pdf->setModeDebug();
-          $html2pdf->pdf->SetDisplayMode('fullpage');
-          $html2pdf->setDefaultFont('Arial');
-          $html2pdf->writeHTML($DATA);
-          $html2pdf->Output($path_file);
-          echo $html2pdf;
-          } else {
-          $this->load->view('template/template', $data);
-          }
-          } else {
-          $this->session->set_flashdata(array('message' => 'Error al cargar el certificado de inscripcion.', 'message_type' => 'danger'));
-          redirect('', 'refresh');
-          }
-          } else {
-          $this->session->set_flashdata(array('message' => 'Error al cargar el certificado de inscripcion.', 'message_type' => 'danger'));
-          redirect('', 'refresh');
-          }
-         */
+    public function logout() {
+        $this->session->set_userdata('logged_in', FALSE);
+        $this->session->sess_destroy();
+        //$this->load->view('login/index');
+        redirect('ingreso/ensayo', 'location');
     }
 
 }

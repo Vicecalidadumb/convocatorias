@@ -8,7 +8,7 @@
     <h4 class="form-signin-heading" style="color:red !important;">Para ingresar al ensayo virtual, 
         por favor introduzca su numero de documento y PIN de Inscripci&oacute;n.
     </h4>
-    <?php echo form_hidden('ensayo',1); ?>
+    <?php echo form_hidden('ensayo', 1); ?>
     <?php echo form_input('username', '', 'class="form-control" placeholder="Documento" required autofocus') ?>
     <?php echo form_password('password', '', 'class="form-control" placeholder="Pin" required') ?>
     <br>
@@ -23,4 +23,3 @@
 
     <br><br><br><br><br><br><br><br><br>
 </div> <!-- /container -->
-
