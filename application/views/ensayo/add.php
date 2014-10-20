@@ -14,9 +14,7 @@
                 <div class="row">
                     <div class="col-md-12" style="text-align: justify !important;font-size: 16px;">
                         <p style="text-align: justify !important;font-size: 16px;">
-                        <h2 class="col-md-12">Presentaci&oacute;n</h2>
-
-                        <br><br>
+                                     <br><br>
                         <h2 class="col-md-12">Instrucciones</h2>
 
 

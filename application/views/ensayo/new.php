@@ -21,8 +21,7 @@
                         <div class="step row">
                             <div class="col-md-12">
                                 <h3 style="font-weight: 600 !important;text-align: justify !important;font-size: 15px !important;">
-                                    texto texto texto texto texto texto texto texto texto texto texto texto 
-                                    texto texto texto texto texto texto texto texto texto texto texto texto 
+                                    <img src="<?php echo base_url('images/vice/Defensoria imagenes.jpg'); ?>">
                                 </h3>
                                 <textarea style="width: 100%;height: 400px;" name="ENSAYO_TEXTO"><?php echo $ensayo[0]->ENSAYO_TEXTO; ?></textarea>
                                 <span class="label label-info">
