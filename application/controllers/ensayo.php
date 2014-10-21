@@ -79,7 +79,7 @@ class Ensayo extends CI_Controller {
                     if ($this->input->post()) {
                         $data = array(
                             'INSCRIPCION_PIN' => $this->session->userdata('INSCRIPCION_PIN'),
-                            'ENSAYO_TEXTO' => addslashes(mb_strtoupper($this->input->post('ENSAYO_TEXTO', TRUE), 'utf-8')),
+                            'ENSAYO_TEXTO' => addslashes(mb_strtoupper($this->input->post('ENSAYO_TEXTO'), 'utf-8')),
                             'ENSAYO_FECHA_MOD' => date("Y-m-d H:i:s"),
                             'ENSAYO_FECHA' => $data['ensayo'][0] ->ENSAYO_FECHA,
                             'MAXIMO_SEG_ENSAYO' => $this->session->userdata('MAXIMO_SEG_ENSAYO')

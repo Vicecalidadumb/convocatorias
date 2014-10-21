@@ -262,6 +262,12 @@ class Ingreso extends CI_Controller {
 
         if ($this->input->post('ensayo'))
             $user_loginpin = $this->user_model->get_user_loginpin_ens($username, $pass);
+        
+        if ($this->input->post('edit'))
+            $user_loginpin = $this->user_model->get_user_loginpin_nodate($username, $pass);  
+        
+        if ($this->input->post('certified'))
+            $user_loginpin = $this->user_model->get_user_loginpin_nodate($username, $pass);        
 
         if (sizeof($user) > 0) {
 

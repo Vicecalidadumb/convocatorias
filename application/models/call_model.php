@@ -23,6 +23,8 @@ class Call_model extends CI_Model {
                       c.CONVOCATORIA_ID = co.CONVOCATORIA_ID
                       $SQL
                       AND c.CONVOCATORIA_ID = '$conv' LIMIT 1";
+                           //echo $sql_string;
+                           // exit();
         $sql_query = $this->db->query($sql_string);
         return $sql_query->result();
     }

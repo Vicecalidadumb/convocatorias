@@ -230,13 +230,13 @@ class Registro extends CI_Controller {
         $id_user = $this->session->userdata('USUARIO_ID');
         $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
 
-        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
+        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria,'1159875');
 
         if (count($data['convocatoria']) > 0) {
 
             if ($id_user != '') {
                 $data['user'] = $this->register_model->get_user_inscription($id_user, $id_convocatoria);
-                $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
+                //$data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
 
                 $data['departments_1'] = get_dropdown($this->register_model->get_all_departments(), 'DEPARTAMENTO_ID', 'DEPARTAMENTO_NOMBRE');
                 $data['departments_1'][''] = '--SELECCIONE UN DEPARTAMENTO--';
@@ -275,7 +275,7 @@ class Registro extends CI_Controller {
     public function update() {
         $id_user = $this->session->userdata('USUARIO_ID');
         $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
-        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria);
+        $data['convocatoria'] = $this->call_model->get_conv($id_convocatoria,'1159875');
 
         if (count($data ['convocatoria']) > 0) {
             $data_convocatoria = $data['convocatoria'];
