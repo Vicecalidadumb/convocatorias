@@ -42,9 +42,9 @@
 
 
     <?php echo form_open('registro/update/' . encrypt_id($convocatoria[0]->CONVOCATORIA_ID), 'id="register_update" class="form-signin" role="form" method="POST" autocomplete="off"'); ?>
-    <?php echo form_hidden('USUARIO_ID',$user[0]->USUARIO_ID) ?>
-    <?php echo form_hidden('USUARIO_NUMERODOCUMENTO_ANT',$user[0]->USUARIO_NUMERODOCUMENTO) ?>
-    <?php echo form_hidden('INSCRIPCION_PIN',$user[0]->INSCRIPCION_PIN) ?>
+    <?php echo form_hidden('USUARIO_ID', $user[0]->USUARIO_ID) ?>
+    <?php echo form_hidden('USUARIO_NUMERODOCUMENTO_ANT', $user[0]->USUARIO_NUMERODOCUMENTO) ?>
+    <?php echo form_hidden('INSCRIPCION_PIN', $user[0]->INSCRIPCION_PIN) ?>
     <div class="row">
 
         <div class="col-md-6">
