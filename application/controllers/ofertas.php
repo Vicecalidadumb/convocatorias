@@ -14,6 +14,7 @@ class Ofertas extends CI_Controller {
         $this->load->model('ofertas_model');
         $this->load->model('register_model');
         $this->load->model('call_model');
+        $this->load->model('call_model');
         $this->load->helper('miscellaneous');
 
         $this->load->library('My_RECAPTCHA');
@@ -38,7 +39,7 @@ class Ofertas extends CI_Controller {
                 //$data['palabra_clave'] = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
                 //$palabra_clave = htmlentities(htmlspecialchars(urldecode($empleo)), ENT_QUOTES, "UTF-8");
                 $data['palabra_clave'] = base64_decode($empleo);
-                $palabra_clave = base64_decode($empleo);				
+                $palabra_clave = base64_decode($empleo);
             } else {
                 $data['palabra_clave'] = $this->input->post('empleo', TRUE);
                 $palabra_clave = $this->input->post('empleo', TRUE);
@@ -53,7 +54,7 @@ class Ofertas extends CI_Controller {
             //$data['ofertas_perfil'] = $this->ofertas_model->get_offers('Aleatorio');
             $data['ofertas'] = $this->ofertas_model->get_offers_groupperfil('Aleatorio', 5);
         }
-        
+
         $data['regiones'] = $this->ofertas_model->get_regiones('Aleatorio', 5);
 
         $data['content'] = 'jobs/index';
@@ -70,7 +71,7 @@ class Ofertas extends CI_Controller {
                 $data['title'] = 'Información del Empleo UMB2014' . str_pad($oferta, 4, "0", STR_PAD_LEFT);
                 $data['ofertas'] = $this->ofertas_model->get_offers_groupperfil('Aleatorio', 3);
                 $data['regiones'] = $this->ofertas_model->get_regiones('Aleatorio', 5);
-                
+
                 $data['template_config'] = array(
                     'signin' => 0,
                     'menu' => 1,
@@ -82,7 +83,6 @@ class Ofertas extends CI_Controller {
 
                 $data['content'] = 'jobs/view';
                 $this->load->view('template/template_jobs', $data);
-                
             } else {
                 $this->session->set_flashdata(array('message' => 'Error al consultar la oferta', 'message_type' => 'danger'));
                 redirect('ofertas', 'refresh');
@@ -206,23 +206,26 @@ class Ofertas extends CI_Controller {
             redirect('ofertas', 'refresh');
         }
     }
-    
-    
-    public function delete_offer($offer = ''){
-        $offer = deencrypt_id($offer);
-        if($offer!=''){
-            $this->ofertas_model->delete_offer($offer);
-            $this->session->set_flashdata(array('message' => 'Seleccion de Oferta Eliminada con Exito', 'message_type' => 'info'));
-            redirect('registro/certificado', 'refresh');             
-        }else{
+
+    public function delete_offer($offer = '') {
+        $data['convocatoria'] = $this->call_model->get_conv(1);
+        if (count($data['convocatoria']) > 0) {
+            $offer = deencrypt_id($offer);
+            if ($offer != '') {
+                $this->ofertas_model->delete_offer($offer);
+                $this->session->set_flashdata(array('message' => 'Seleccion de Oferta Eliminada con Exito', 'message_type' => 'info'));
+                redirect('registro/certificado', 'refresh');
+            } else {
+                $this->session->set_flashdata(array('message' => 'Error al Eliminar la Oferta', 'message_type' => 'danger'));
+                redirect('registro/certificado', 'refresh');
+            }
+        } else {
             $this->session->set_flashdata(array('message' => 'Error al Eliminar la Oferta', 'message_type' => 'danger'));
-            redirect('registro/certificado', 'refresh');            
+            redirect('registro/certificado', 'refresh');
         }
     }
-    
-    
-    /********************************************************/
-    
+
+    /*     * ***************************************************** */
 
     public function add($conv = 1) {
         $conv = deencrypt_id_v2($conv);
