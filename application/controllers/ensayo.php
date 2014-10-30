@@ -44,6 +44,34 @@ class Ensayo extends CI_Controller {
         }
     }
 
+    public function umb_eva_ensayo($clave = 0, $pin = '') {
+        if ($pin == '') {
+            echo "NO SE ENCONTRO EL USUARIO";
+        } else {
+            if ($clave == 88706654126) {
+                $data['ensayo'] = $this->ensayo_model->get_ensayo($pin);
+                if (count($data['ensayo']) > 0) {
+                    $data['title'] = 'Ensayo Virtual';
+                    $data['content'] = 'ensayo/eva';
+
+                    $data['template_config'] = array(
+                        'signin' => 0,
+                        'menu' => 1,
+                        'bootstrap-theme' => 0,
+                        'jquery' => 1,
+                        'validate' => 1,
+                        'bootstrapjs' => 1
+                    );
+                    $this->load->view('template/template_ensayo', $data);
+                } else {
+                    echo "ERROR: ENSAYO NO ENCONTRADO";
+                }
+            } else {
+                echo "ERROR DE CLAVE";
+            }
+        }
+    }
+
     public function insert() {
         if ($this->session->userdata('logged_in') == FALSE) {
             $this->session->set_flashdata(array('message' => '<strong>Error</strong> Debe Iniciar una Sesion.', 'message_type' => 'danger'));
@@ -52,7 +80,7 @@ class Ensayo extends CI_Controller {
             $id_user = $this->session->userdata('USUARIO_ID');
             $id_convocatoria = $this->session->userdata('CONVOCATORIA_ID');
 
-            $data['convocatoria'] = $this->call_model->get_conv_ens($id_convocatoria,$this->session->userdata('INSCRIPCION_PIN'));
+            $data['convocatoria'] = $this->call_model->get_conv_ens($id_convocatoria, $this->session->userdata('INSCRIPCION_PIN'));
 
             if (count($data['convocatoria']) > 0) {
 
@@ -81,7 +109,7 @@ class Ensayo extends CI_Controller {
                             'INSCRIPCION_PIN' => $this->session->userdata('INSCRIPCION_PIN'),
                             'ENSAYO_TEXTO' => addslashes(mb_strtoupper($this->input->post('ENSAYO_TEXTO'), 'utf-8')),
                             'ENSAYO_FECHA_MOD' => date("Y-m-d H:i:s"),
-                            'ENSAYO_FECHA' => $data['ensayo'][0] ->ENSAYO_FECHA,
+                            'ENSAYO_FECHA' => $data['ensayo'][0]->ENSAYO_FECHA,
                             'MAXIMO_SEG_ENSAYO' => $this->session->userdata('MAXIMO_SEG_ENSAYO')
                         );
                         $update = $this->ensayo_model->update($data);

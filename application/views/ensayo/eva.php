@@ -14,7 +14,7 @@
 
             <div class="step">
                 <div class="row">
-                    <h1 class="col-md-12">Ensayo Virtual</h1>
+                    <h1 class="col-md-12">Ensayo Virtual, PIN: <?php echo $ensayo[0]->INSCRIPCION_PIN; ?> </h1>
                     <div id="time1"></div>
                     <br>
                     <div class="col-md-12">
@@ -46,29 +46,6 @@
             <div class="submit step" id="complete" style="display: none;">
                 <button type="submit" name="process" class="submit"></button>
             </div>	            
-        </div>
-
-
-        <div id="bottom-wizard">
-            <div class="row">
-                <div class="col-md-6" style="text-align: left !important;">
-                    <a href="<?php echo base_url('ensayo/logout') ?>" class="btn btn-danger">&nbsp;&nbsp;&nbsp;Salir&nbsp;&nbsp;&nbsp;</a>
-                </div>                 
-                <div class="col-md-6" style="text-align:right  !important;">                    
-                    <button type="sutmit" data-loading-text="Guardando....." class="btn btn-success loading-example-btn-all" style="background:#2ed83a !important;">Guardar </button>
-                </div>                    
-            </div>
-            <div class="row">
-                <div class="col-md-12" style="text-align: left !important;">
-                    <br>
-                    <h5>
-                        <span class="label label-default">
-                            Sesion iniciada por:
-                            <?php echo $this->session->userdata('USUARIO_NOMBRES') . ' ' . $this->session->userdata('USUARIO_APELLIDOS'); ?>
-                        </span>
-                    </h5>
-                </div>                
-            </div>             
         </div>
 
     </div>
