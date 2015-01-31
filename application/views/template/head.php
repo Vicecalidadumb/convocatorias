@@ -18,13 +18,13 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 
-        <?php if ($template_config['signin']): ?>
+        <?php if (isset($template_config['signin'])): ?>
             <!-- Custom styles for this template -->
             <link href="<?php echo base_url('dist/css/signin.css'); ?>" rel="stylesheet">        
         <?php endif; ?>
 
 
-        <?php if ($template_config['bootstrap-theme']): ?>
+        <?php if (isset($template_config['bootstrap-theme'])): ?>
             <!-- Bootstrap theme -->
             <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.css">
         <?php endif; ?>
@@ -45,18 +45,18 @@
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
 
-        <?php if ($template_config['jquery']): ?>
+        <?php if (isset($template_config['jquery'])): ?>
             <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <?php endif; ?>
 
-        <?php if ($template_config['validate']): ?>
+        <?php if (isset($template_config['validate'])): ?>
             <script src="<?php echo base_url('dist/js/jquery.validate.min.js'); ?>"></script> 
             <script src="<?php echo base_url('dist/js/messages_es.js'); ?>"></script>
         <?php endif; ?>
 
         <link href="<?php echo base_url('dist/css/style.css'); ?>" rel="stylesheet">
 
-        <?php if ($template_config['bootstrapjs']): ?>
+        <?php if (isset($template_config['bootstrapjs'])): ?>
             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <?php endif; ?>
 
